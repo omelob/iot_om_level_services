@@ -2,12 +2,26 @@ version: "3.8"
 
 volumes:
   vol-emqx-data:
-    name: foo-emqx-data
+    name: om-emqx-data
   vol-emqx-etc:
-    name: foo-emqx-etc
+    name: om-emqx-etc
   vol-emqx-log:
-    name: foo-emqx-log
+    name: om-emqx-log
+
 services:
+
+  mongo:
+    container_name: mongo
+    image: mongo:4.4
+    restart: always
+    environment: 
+      TZ: "America/Bogota"
+      MONGO_INITDB_ROOT_USERNAME: "devuser"
+      MONGO_INITDB_ROOT_PASSWORD: "devpassword"
+    volumes:
+      - /mongodata:/data/db
+    ports:
+      - 27017:27017
   
   emqx:
     container_name: emqx
@@ -25,6 +39,11 @@ services:
     environment:
       EMQX_NAME: om-emqx
       EMQX_HOST: 127.0.0.1
+
+      TZ: "America/Bogota"
+
+      # DEFAULT DASH PSW      
+      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "emqxdashpass"
 
       EMQX_LISTENER__TCP__EXTERNAL__MAX_CONNECTIONS: 1000
     
