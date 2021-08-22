@@ -11,9 +11,10 @@ services:
   node:
     container_name: node
     image: "node:14"
+    restart: always
     working_dir: /home/node/app
     volumes:
-      - ./app/:/home/node/app
+      - ./mycode/index.js:/home/node/app/index.js
     ports:
       - "3000:3000"
       - "3001:3001"
@@ -23,12 +24,12 @@ services:
       - emqx
       - mongo
 
-    command: sh -c "npm run build && npm run start" 
-    #command: sh -c "npm install"
+    command: sh -c "node index.js"
 
   mongo:
     container_name: mongo
-    image: mongo:4.4    
+    image: mongo:4.4
+    restart: always
     environment: 
       TZ: "${TZ}"
       MONGO_INITDB_ROOT_USERNAME: "${MONGO_USERNAME}"
@@ -41,6 +42,7 @@ services:
   emqx:
     container_name: emqx
     image: emqx/emqx:4.2.4
+    restart: always
     ports:
       - 18083:18083
       - 1883:1883
